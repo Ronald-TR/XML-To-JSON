@@ -13,7 +13,6 @@ uses
  System.Classes;
 
 function xml_to_json(AXML : IXMLNode): string; overload;
-
 // USADO COMO AUX INTERNO DE XML_TO_JSON, COMPARTILHA OS PONTEIROS COM OS ATRIBUTOS
 procedure add_attributes_in_jsonObject(AXML : IXMLNode; AJSONTarget : TJSONObject);
 
@@ -36,47 +35,37 @@ begin
         end;
     end;
 end;
-
 // PARSE XML TO JSON
 function xml_to_json(AXML : IXMLNode): string;
 var
   rtCon : TRttiContext;
-  oJS, oJSCollection : TJSONObject;
+  oJS : TJSONObject;
   oJSListCollection : TJSONArray;
-  i, j, k : integer;
+  i, j : integer;
   odata : OleVariant;
-  snome, svalue : string;
+  svalue : string;
 begin
-
     oJS := TJSONObject.Create;
-
+    
     add_attributes_in_jsonObject(AXML, oJS);
 
     for I := 0 to AXML.ChildNodes.Count -1 do
     begin
-        snome := AXML.ChildNodes.Nodes[i].NodeName;
-
-
         if AXML.ChildNodes.Nodes[i].Collection <> nil then
         begin
-        k := AXML.ChildNodes.Nodes[i].Collection.Count;
              oJSListCollection := TJSONArray.Create;
-
              try
                  for j := 0 to AXML.ChildNodes.Nodes[i].Collection.Count-1 do
                  begin
                     svalue := xml_to_json(AXML.ChildNodes.Nodes[i].Collection.Nodes[j]).replace('"{', '{').Replace('}"', '}');
                     oJSListCollection.Add(svalue);
-
                  end;
-
                  Result := oJSListCollection.ToJSON;
              finally
                  oJSListCollection.Free;
                  oJS.Free; // dando free no oJS pois por causa do exit, seu free não é executado no fim da rotina, então ele acaba sendo criado a toa no inicio da função;
              end;
-
-             exit;
+             Exit;
         end
         else
         if (AXML.ChildNodes.Nodes[i].NodeType = ntElement) then
@@ -85,11 +74,9 @@ begin
             if AXML.ChildNodes.Nodes[i].ChildNodes.Count = 1 then
             begin
                 // SE O NÓ FOR UM TEXTO
-
                 if (AXML.ChildNodes.Nodes[i].ChildNodes.First.NodeType = ntText) then
                 begin
                    oJS.AddPair(AXML.ChildNodes.Nodes[i].NodeName, AXML.ChildNodes.Nodes[i].ChildNodes.First.NodeValue);
-
                 end
                 else // SENÃO, CHAMAR RECURSIVO
                 if (AXML.ChildNodes.Nodes[i].HasChildNodes) or (AXML.ChildNodes.Nodes[i].AttributeNodes.Count > 0) then
@@ -103,12 +90,9 @@ begin
             else
                 oJS.AddPair(AXML.ChildNodes.Nodes[i].NodeName, 'nil');
         end;
-
     end;
-
     // CORREÇÃO DA EXTRAÇÃO
     Result := oJS.ToJSON.Replace('\', '').Replace('"[', '[').Replace(']"', ']').replace('"{', '{').Replace('}"', '}');
-
     oJS.Free;
 end;
 end.
