@@ -4,7 +4,6 @@ unit libXmlToJson;
 }
 interface
 uses
- System.Rtti,
  xmldoc, 
  Xml.XMLIntf, 
  system.json, 
@@ -40,7 +39,6 @@ end;
 // PARSE XML TO JSON
 function xml_to_json(AXML : IXMLNode): string;
 var
-  rtCon : TRttiContext;
   oJS : TJSONObject;
   oJSListCollection : TJSONArray;
   i, j : integer;
