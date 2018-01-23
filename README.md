@@ -19,7 +19,7 @@ if you don't create a *Variable Interface* from a databinding, unfortunately, li
     begin
         iVariable : NewDataBindingXMLObject;
         // do something in your XML Object 
-        sJSON := xml_to_json(iVariavel);
+        sJSON := xml_to_json(iVariable);
     end;
     
 
