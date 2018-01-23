@@ -1,5 +1,7 @@
 unit libXmlToJson;
-
+{
+    Made by Ronald Rodrigues Farias
+}
 interface
 uses
  System.Rtti,
