@@ -78,6 +78,10 @@ begin
                 begin
                    oJS.AddPair(AXML.ChildNodes.Nodes[i].NodeName, AXML.ChildNodes.Nodes[i].ChildNodes.First.NodeValue);
                 end
+                else if (AXML.ChildNodes.Nodes[i].ChildNodes.First.NodeType = ntCData) then
+                begin
+                   oJS.AddPair(AXML.ChildNodes.Nodes[i].NodeName, QuotedStr(AXML.ChildNodes.Nodes[i].ChildNodes.First.Text));
+                end
                 else // SENÃO, CHAMAR RECURSIVO
                 if (AXML.ChildNodes.Nodes[i].HasChildNodes) or (AXML.ChildNodes.Nodes[i].AttributeNodes.Count > 0) then
                     oJS.AddPair(AXML.ChildNodes.Nodes[i].NodeName, xml_to_json(AXML.ChildNodes.Nodes[i]))
